@@ -1,4 +1,5 @@
 import requests
+from models import MarketQuote
 
 BASE_URL = "https://external-api.kalshi.com/trade-api/v2"
 
@@ -27,15 +28,19 @@ def get_kalshi_market():
 
     market = data["markets"][0]
 
-    return {
-        "target": market["floor_strike"],
-        "up_price": float(market["yes_ask_dollars"]),
-        "down_price": float(market["no_ask_dollars"]),
-        "close_time": market["close_time"],
-    }
+    return MarketQuote(
+        platform="Kalshi",
+        target=market["floor_strike"],
+        up=float(market["yes_ask_dollars"]),
+        down=float(market["no_ask_dollars"]),
+        close_time=market["close_time"],
+    )
+
 market = get_kalshi_market()
 
 if market is None:
     print("No Open Market Right Now")
 else:
-    print(f"Target: ${market['target']} | UP: {market['up_price']} | DOWN: {market['down_price']} | CLOSES: {market['close_time']}")
+    print(f"Target: ${market.target} | UP: {market.up} | DOWN: {market.down} | CLOSES: {market.close_time}")
+
+print(market)
