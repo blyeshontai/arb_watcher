@@ -36,11 +36,12 @@ def get_kalshi_market():
         close_time=market["close_time"],
     )
 
-market = get_kalshi_market()
+if __name__ == "__main__":
+    market = get_kalshi_market()
 
-if market is None:
-    print("No Open Market Right Now")
-else:
-    print(f"Target: ${market.target} | UP: {market.up} | DOWN: {market.down} | CLOSES: {market.close_time}")
+    if market is None:
+        print("No Open Market Right Now")
+    else:
+        print(f"Target: ${market.target} | UP: {market.up} | DOWN: {market.down} | CLOSES: {market.close_time}")
 
-print(market)
+    print(market)
