@@ -30,8 +30,13 @@ def get_polymarket_market(event_slug):
     response.raise_for_status()
     market = response.json()["event"]["markets"][0]
 
+    # for the first few seconds of a window, the target isn't set yet (null)
+    price_to_beat = market["assetPriceTerms"].get("priceToBeat")
+    if price_to_beat is None:
+        return None
+
     market_slug = market["slug"]
-    target = float(market["assetPriceTerms"]["priceToBeat"]["value"])
+    target = float(price_to_beat["value"])
     close_time = market["assetPriceTerms"]["windowEnd"]
 
     # the BBO (best bid and offer) has the live prices

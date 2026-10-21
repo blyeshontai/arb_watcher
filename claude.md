@@ -22,6 +22,8 @@ I'm an apprentice software engineer and I'm building this to learn.
 | `arb.py` | `ArbPair` (one side on Poly, the opposite on Kalshi): `total_cost`, `profit`, `target_gap`, `is_opportunity`; helpers `side_price`, `opposite` |
 | `hedge.py` | `Leg` dataclass and the hedge math: `hedge_size`, `locked_in`, `max_hedge_price`; plus `fetch_quote` and the `input()` helpers. Asks the same 4 things for either app (app, side, price %, cost $), works out the shares, and lets me correct them. Output is in plain sentences |
 | `main.py` | The live loop. Asks for a mode: **scan** checks both apps every 1.5s; **hedge** asks for my leg and watches the hedge price until the window ends |
+| `server.py` | Flask server for the web UI. `GET /status` (scan), `GET /shares` (shares from a receipt's cost), `GET /hedge` (plan + live hedge price). Returns JSON; errors come back as `{"error": ...}` |
+| `static/` | The web UI: `index.html` (layout), `style.css` (looks, green = opportunity), `app.js` (asks the server every 1.5s and fills the page) |
 | `tests/` | `unittest` tests (`tests/__init__.py` is empty but lets `unittest` find them). The API tests use `unittest.mock` with fake JSON, so they don't hit the internet |
 
 Each module has an `if __name__ == "__main__":` block for testing it on its own.
@@ -29,7 +31,9 @@ Each module has an `if __name__ == "__main__":` block for testing it on its own.
 ## Running
 
 - `python main.py`: pick `scan` or `hedge`; Ctrl+C stops it
+- `python server.py`, then open http://127.0.0.1:5000: the web UI (Ctrl+C in the terminal stops it)
 - `python -m unittest`: runs every test file
+- Libraries: `requests`, `flask`
 
 ## API facts we've confirmed
 
@@ -51,6 +55,7 @@ Each module has an `if __name__ == "__main__":` block for testing it on its own.
   - `feeCoefficient` (was 0.0695)
 - `GET /markets/{market_slug}/bbo` → `marketData.longQuote.value` = cost of UP, `marketData.shortQuote.value` = cost of DOWN (strings).
 - Near a window's close or open, `longQuote` / `shortQuote` can be missing. The function returns `None` then.
+- In the first few seconds of a window, `priceToBeat` is `null` (also returns `None`), and the BBO request can 404 (shows as a failed request; the next check usually works).
 
 ### Matching the two
 - Same window = Kalshi `close_time` equals Polymarket `windowEnd`.
@@ -77,7 +82,7 @@ Each module has an `if __name__ == "__main__":` block for testing it on its own.
 - [x] **Phase 5:** Live loop every 1.5s, two modes (scan and hedge). Alerts are a standout block of `!` lines, no sound. Failed requests are printed and the loop keeps going.
 - [x] **Tests:** `unittest` for fees, `ArbPair`, the hedge math, both API parsers (mocked), and the loop pieces in `main.py`
 - [ ] **Phase 6 (later):** Log every check and alert to CSV to see how often real opportunities happen.
-- [ ] **Phase 7 (later):** README; a Flask endpoint (`GET /status`) plus an HTML/CSS/JS dashboard that turns green on an opportunity. I can test the endpoint in Postman.
+- [ ] **Phase 7:** ~~Flask endpoint (`GET /status`) plus an HTML/CSS/JS dashboard that turns green on an opportunity~~ done (`server.py`, `static/`); I can test the endpoints in Postman. README still to do.
 
 ## Open questions
 - Polymarket US fee rounding is still unknown (the 0.0695 rate is confirmed). A larger trade's receipt would show it. Only `fees.py` would change.

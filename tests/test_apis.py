@@ -86,6 +86,16 @@ class TestPolymarketMarket(unittest.TestCase):
         self.assertTrue(bbo_url.endswith("/markets/cpc-btc-updown-15m-2026-10-21-1715z/bbo"))
 
     @patch("polymarket.requests.get")
+    def test_target_not_set_yet(self, mock_get):
+        # seen live at 18:30:00 UTC: a brand-new window had "priceToBeat": null
+        event = {"event": {"markets": [{
+            "slug": "cpc-btc-updown-15m-2026-10-21-1830z",
+            "assetPriceTerms": {"priceToBeat": None, "windowEnd": "2026-10-21T18:45:00Z"},
+        }]}}
+        mock_get.return_value = fake_response(event)
+        self.assertIsNone(get_polymarket_market("btc-updown-15m-2026-10-21-1830z"))
+
+    @patch("polymarket.requests.get")
     def test_missing_quote(self, mock_get):
         no_short = {"marketData": {"longQuote": {"value": "0.91"}}}
         mock_get.side_effect = [fake_response(POLY_EVENT), fake_response(no_short)]

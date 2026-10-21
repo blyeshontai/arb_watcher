@@ -1,0 +1,138 @@
+/* colors in one place, with a dark version */
+:root {
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --text: #1c1f24;
+  --muted: #646b75;
+  --border: #d9dde3;
+  --good: #1f8a4c;
+  --good-bg: #e3f5ea;
+  --bad: #b3261e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15171a;
+    --card: #1f2226;
+    --text: #e8eaed;
+    --muted: #9aa1ab;
+    --border: #33373d;
+    --good: #4cc27e;
+    --good-bg: #173524;
+    --bad: #ef7a72;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+}
+
+header, main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 1.4rem;
+}
+
+button, input, select {
+  font: inherit;
+}
+
+.tab {
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.tab.active {
+  border-color: var(--text);
+  font-weight: 600;
+}
+
+.status {
+  color: var(--muted);
+}
+
+.cards {
+  display: grid;
+  gap: 12px;
+}
+
+.card {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+}
+
+.card h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.card .profit {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+/* the "alert": a pairing or hedge that makes money turns green */
+.card.good, .live.good {
+  border-color: var(--good);
+  background: var(--good-bg);
+}
+
+.good .profit, .live.good {
+  color: var(--good);
+}
+
+.loss {
+  color: var(--bad);
+}
+
+form {
+  display: grid;
+  gap: 12px;
+}
+
+label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+}
+
+input, select {
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--text);
+}
+
+button[type="submit"], #stop {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: var(--text);
+  color: var(--bg);
+  cursor: pointer;
+}
+
+.live {
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  font-size: 1.3rem;
+  font-weight: 600;
+}

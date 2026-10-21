@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>arb-watcher</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>arb-watcher</h1>
+    <nav>
+      <button id="scan-tab" class="tab active">Scan</button>
+      <button id="hedge-tab" class="tab">Hedge</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Scan: both pairings, refreshed every 1.5s -->
+    <section id="scan-view">
+      <p id="scan-status" class="status">Loading…</p>
+      <div id="pairs" class="cards"></div>
+    </section>
+
+    <!-- Hedge: enter the leg from its receipt, then watch the other side -->
+    <section id="hedge-view" hidden>
+      <form id="leg-form">
+        <label>App
+          <select id="app">
+            <option value="poly">Polymarket</option>
+            <option value="kalshi">Kalshi</option>
+          </select>
+        </label>
+        <label>Side
+          <select id="side">
+            <option value="up">Up (Kalshi: Yes)</option>
+            <option value="down">Down (Kalshi: No)</option>
+          </select>
+        </label>
+        <label>Price you bought at (%)
+          <input id="price" type="number" step="0.1" min="0.1" max="99.9" required>
+        </label>
+        <label>Cost ($)
+          <input id="cost" type="number" step="0.01" min="0.01" required>
+        </label>
+        <label>Shares (worked out; fix it if your receipt differs)
+          <input id="shares" type="number" step="0.01" min="0.01" required>
+        </label>
+        <button type="submit">Start watching</button>
+      </form>
+
+      <div id="plan" hidden>
+        <p><strong>Based on your leg:</strong></p>
+        <ul>
+          <li id="plan-paid"></li>
+          <li id="plan-hedge"></li>
+          <li id="plan-break-even"></li>
+        </ul>
+        <div id="live" class="live">Waiting for a price…</div>
+        <button id="stop" type="button">Stop</button>
+      </div>
+      <p id="hedge-status" class="status"></p>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
